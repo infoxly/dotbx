@@ -32,7 +32,7 @@ class ApiReseller{
         $response = curl_exec($session);
         
         if (curl_errno($session)) {
-            $ip = dotbx_GetIP();
+            $ip = ApiReseller::dotbxGetIP();
             $ip2 = isset($_SERVER["SERVER_ADDR"]) ? $_SERVER["SERVER_ADDR"] : $_SERVER["LOCAL_ADDR"];
             
             $return['errors'][] =   array('message' => "CURL Error: " . curl_errno($session) . " - " . curl_error($session) . " (IP: " . $ip . " & " . $ip2 . ")" );
@@ -221,7 +221,7 @@ class ApiReseller{
         return $x. " Message ==> ( " . implode(", ", $return) ." )";
     }
     
-    function dotbx_GetIP()
+    public static function dotbxGetIP()
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, "https://api1.whmcs.com/ip/get");
@@ -232,7 +232,7 @@ class ApiReseller{
         if (!empty($contents)) {
             $data = json_decode($contents, true);
             if (is_array($data) && isset($data["ip"])) {
-                echo $data["ip"];
+                return $data["ip"];
             }
         }
         return "";
